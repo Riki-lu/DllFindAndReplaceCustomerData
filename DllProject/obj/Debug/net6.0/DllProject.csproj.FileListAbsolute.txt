@@ -1,0 +1,11 @@
+Z:\Microsoft\project\Project\DllProject\DllProject\bin\Debug\net6.0\DllProject.deps.json
+Z:\Microsoft\project\Project\DllProject\DllProject\bin\Debug\net6.0\DllProject.dll
+Z:\Microsoft\project\Project\DllProject\DllProject\bin\Debug\net6.0\ref\DllProject.dll
+Z:\Microsoft\project\Project\DllProject\DllProject\bin\Debug\net6.0\DllProject.pdb
+Z:\Microsoft\project\Project\DllProject\DllProject\obj\Debug\net6.0\DllProject.GeneratedMSBuildEditorConfig.editorconfig
+Z:\Microsoft\project\Project\DllProject\DllProject\obj\Debug\net6.0\DllProject.AssemblyInfoInputs.cache
+Z:\Microsoft\project\Project\DllProject\DllProject\obj\Debug\net6.0\DllProject.AssemblyInfo.cs
+Z:\Microsoft\project\Project\DllProject\DllProject\obj\Debug\net6.0\DllProject.csproj.CoreCompileInputs.cache
+Z:\Microsoft\project\Project\DllProject\DllProject\obj\Debug\net6.0\DllProject.dll
+Z:\Microsoft\project\Project\DllProject\DllProject\obj\Debug\net6.0\ref\DllProject.dll
+Z:\Microsoft\project\Project\DllProject\DllProject\obj\Debug\net6.0\DllProject.pdb

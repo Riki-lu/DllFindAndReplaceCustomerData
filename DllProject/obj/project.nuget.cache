@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "qpkaE2RSI5ZGKgAp7WRR9TynOPSDCYFmPTGQ8rK4+8FKanFgy/+6dWLKo6U0upDtOZ8KeUTOTnQIqJaZqq5ZfQ==",
+  "success": true,
+  "projectFilePath": "Z:\\Microsoft\\project\\Project\\DllProject\\DllProject\\CleanQueryFromCustomerData.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\RL\\.nuget\\packages\\microsoft.azure.kusto.language\\10.1.0\\microsoft.azure.kusto.language.10.1.0.nupkg.sha512"
+  ],
+  "logs": []
+}

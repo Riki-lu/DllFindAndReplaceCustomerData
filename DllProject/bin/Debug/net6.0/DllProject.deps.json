@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "DllProject/1.0.0": {
+        "dependencies": {
+          "Microsoft.Azure.Kusto.Language": "10.1.0"
+        },
+        "runtime": {
+          "DllProject.dll": {}
+        }
+      },
+      "Microsoft.Azure.Kusto.Language/10.1.0": {
+        "runtime": {
+          "lib/net5.0/Kusto.Language.dll": {
+            "assemblyVersion": "10.1.0.0",
+            "fileVersion": "10.1.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DllProject/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Azure.Kusto.Language/10.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nH4NAncKSBSQmFOuz5EMaGhQBABQrFuyB00LC/8jISl4SEZESmKv69r46DWhJsUssXH1Y55CFaXzPRQTaGQxkw==",
+      "path": "microsoft.azure.kusto.language/10.1.0",
+      "hashPath": "microsoft.azure.kusto.language.10.1.0.nupkg.sha512"
+    }
+  }
+}
