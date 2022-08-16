@@ -59,8 +59,9 @@ namespace DllProject
                     case SyntaxKind.PatternStatement:
                     case SyntaxKind.FunctionParameters:
                     case SyntaxKind.RangeOperator:
+                        //would you rather put it in a new variable? {[n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText}
                         if (customerDataWordsAndAlternateWords[n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText] == null)
-                            customerDataWordsAndAlternateWords.Add(n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText, "CustomerData" + index++);
+                        customerDataWordsAndAlternateWords.Add(n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText, "CustomerData" + index++);
                         break;
                     case SyntaxKind.ProjectOperator:
                     case SyntaxKind.ProjectRenameOperator:
