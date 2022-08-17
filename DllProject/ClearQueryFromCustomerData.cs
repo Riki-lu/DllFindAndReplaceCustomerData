@@ -17,9 +17,8 @@ namespace DllProject
             var queryValidateErrors = ValidateQuery(query);
             if (queryValidateErrors == null)
             {
-                //maybe to call it-customerDataWordsAndReplacementWords(Replacement)
-                var customerDataWordsAndAlternateWords = PassQueryFindCustomerData(query);
-                return customerDataWordsAndAlternateWords.Count > 0 ? ReplaceCustomerData(query, customerDataWordsAndAlternateWords) : query;
+                var customerDataWordsAndReplacementWords = PassQueryFindCustomerData(query);
+                return customerDataWordsAndReplacementWords.Count > 0 ? BuildCleanQueryReplaceCustomerData(query, customerDataWordsAndReplacementWords) : query;
             }
             return queryValidateErrors.Select(x => x.Message).ToList();
         }
@@ -39,12 +38,11 @@ namespace DllProject
         /// pass the query, find the customer data.
         /// </summary>
         /// <param name="query">a Kusto query</param>
-        /// maybe Replacement word/altenate
-        /// <returns>hash table:key-all customer data had found value-Replacement word/altenate</returns>
+        /// <returns>hash table:key-all customer data had found value-Replacement word</returns>
         private static Hashtable PassQueryFindCustomerData(string query)
         {
             var index = 0;
-            var customerDataWordsAndAlternateWords = new Hashtable();
+            var customerDataWordsAndReplacementWords = new Hashtable();
             var parseQuery = KustoCode.Parse(query);
             SyntaxElement.WalkNodes(parseQuery.Syntax,
             n =>
@@ -57,50 +55,61 @@ namespace DllProject
                     case SyntaxKind.LookupOperator:
                     case SyntaxKind.AsOperator:
                     case SyntaxKind.PatternStatement:
-                    case SyntaxKind.FunctionParameters:
                     case SyntaxKind.RangeOperator:
-                        //would you rather put it in a new variable? {[n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText}
-                        if (customerDataWordsAndAlternateWords[n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText] == null)
-                        customerDataWordsAndAlternateWords.Add(n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText, "CustomerData" + index++);
+                    case SyntaxKind.NameAndTypeDeclaration:
+                        if (customerDataWordsAndReplacementWords[n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText] == null)
+                            customerDataWordsAndReplacementWords.Add(n.GetFirstDescendant<NameDeclaration>().GetFirstToken().ValueText, "CustomerData" + index++);
                         break;
                     case SyntaxKind.ProjectOperator:
                     case SyntaxKind.ProjectRenameOperator:
                     case SyntaxKind.SummarizeOperator:
                     case SyntaxKind.PrintOperator:
                     case SyntaxKind.ExtendOperator:
+                    case SyntaxKind.ParseOperator:
+                    case SyntaxKind.ParseWhereOperator:
                         var lstCustomerData = n.GetDescendants<NameDeclaration>().ToList();
                         foreach (var item in lstCustomerData)
                         {
-                            if (customerDataWordsAndAlternateWords[item.GetFirstToken().ValueText] == null)
-                                customerDataWordsAndAlternateWords.Add(item.GetFirstToken().ValueText, "CustomerData" + index++);
+                            if (customerDataWordsAndReplacementWords[item.GetFirstToken().ValueText] == null)
+                                customerDataWordsAndReplacementWords.Add(item.GetFirstToken().ValueText, "CustomerData" + index++);
                         }
                         break;
                     //Sensitive Parmeters-themselvs Customer Data word.
                     case SyntaxKind.NamedParameter:
-                        if (customerDataWordsAndAlternateWords[n.GetFirstToken().ValueText] == null)
-                            customerDataWordsAndAlternateWords.Add(n.GetFirstToken().ValueText, "CustomerData" + index++);
+                        if (customerDataWordsAndReplacementWords[n.GetFirstToken().ValueText] == null)
+                            customerDataWordsAndReplacementWords.Add(n.GetFirstToken().ValueText, "CustomerData" + index++);
                         break;
                     case SyntaxKind.StringLiteralExpression:
-                        if (customerDataWordsAndAlternateWords[n.ToString()] == null)
-                            customerDataWordsAndAlternateWords.Add(n.ToString(), "CustomerData" + index++);
+                        if (customerDataWordsAndReplacementWords[n.ToString()] == null)
+                            customerDataWordsAndReplacementWords.Add(n.ToString(), "CustomerData" + index++);
                         break;
                 }
             });
-            return customerDataWordsAndAlternateWords;
+            return customerDataWordsAndReplacementWords;
         }
 
         /// <summary>
         /// Replace the customer data words 
         /// </summary>
         /// <param name="query">a Kusto query</param>
-        /// <param name="customerDataWordsAndAlternateWords">list of all customer data had found in this query and the alternate words</param>
+        /// <param name="customerDataWordsAndReplacementWords">list of all customer data had found in this query and the alternate words</param>
         /// <returns>new query without customer data</returns>
-        public static string ReplaceCustomerData(string query, Hashtable customerDataWordsAndAlternateWords)
+        public static string BuildCleanQueryReplaceCustomerData(string query, Hashtable customerDataWordsAndReplacementWords)
         {
             var parseQuery = KustoCode.Parse(query);
             var splitQuery = parseQuery.GetLexicalTokens().ToList();
             var cleanQuery = "";
-            splitQuery.ForEach(word => cleanQuery += customerDataWordsAndAlternateWords[word.Text] != null ? customerDataWordsAndAlternateWords[word.Text] + " " : word.Text + " ");
+            var customerDataWord = "";
+            foreach (var word in splitQuery)
+            {
+                if (customerDataWordsAndReplacementWords[word.Text] != null)
+                {
+                    customerDataWord = customerDataWordsAndReplacementWords[word.Text].ToString();
+                    cleanQuery += char.IsLetter(customerDataWord[0]) ? " " + customerDataWord : customerDataWord;
+                }
+                else
+                    cleanQuery += word.Text != "" ? Char.IsLetter(word.Text[0]) ? " " + word.Text : word.Text : "";
+            }
             return cleanQuery;
         }
     }
